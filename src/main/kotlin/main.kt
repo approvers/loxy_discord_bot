@@ -3,7 +3,7 @@ import java.io.File
 
 fun main() = runBlocking {
 
-    val token = File("TOKEN").readText()
+    val token = System.getenv("TOKEN") ?: File("TOKEN").readText()
     MyFancyDiscordClient(token).run()
 
 }
