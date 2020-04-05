@@ -20,7 +20,7 @@ fun String.splitByDelimiters(
     delimiter: CharArray = charArrayOf(' '),
     stringDelimiter: CharArray = charArrayOf('"', '\''),
     keepDelimiter: CharArray = charArrayOf('`')
-): MutableList<String> {
+): List<String> {
 
     if(delimiter.isEmpty()) throw IllegalArgumentException("Delimiter cannot be empty")
 

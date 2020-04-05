@@ -1,4 +1,4 @@
-package lib
+package lib.respond
 
 import net.ayataka.kordis.entity.message.MessageBuilder
 import java.awt.Color

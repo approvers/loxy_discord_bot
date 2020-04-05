@@ -8,6 +8,9 @@ import net.ayataka.kordis.entity.message.MessageBuilder
  * @param result コマンドの実行結果。
  */
 class RespondMessage(
-    val queuedMessage: Array<MessageBuilder.() -> Unit>,
+    val queuedMessage: List<MessageBuilder.() -> Unit>,
     val result: CommandResultEnum
-)
+) {
+    constructor(message: MessageBuilder.() -> Unit, result: CommandResultEnum) : this(listOf(message), result)
+    constructor(message: String, result: CommandResultEnum) : this(listOf<MessageBuilder.() -> Unit> {content = message}, result)
+}

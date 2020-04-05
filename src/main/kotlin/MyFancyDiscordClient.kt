@@ -20,7 +20,7 @@ class MyFancyDiscordClient(private val botToken: String) {
      */
     private lateinit var client: DiscordClient
 
-    private val PREFIX = "//"
+    private val prefix = "//"
 
     /**
      * クライアントを実行する
@@ -40,19 +40,17 @@ class MyFancyDiscordClient(private val botToken: String) {
         // メッセージをフィルタリングする
         if (author.bot) return
         if (respondChannel.indexOf(channel.id) == -1) return
-        if (!event.message.content.startsWith(PREFIX)) return
+        if (!event.message.content.startsWith(prefix)) return
 
         try {
             // コマンドを実行する
-            val result: RespondMessage = CommandExecutor.parseAndExec(event)
+            val result: RespondMessage = CommandExecutor.parseAndExec(event.message, prefix)
 
             // キューされたメッセージを送信する
             for(msg in result.queuedMessage){
                 channel.send(msg)
             }
 
-            val resultMessage = result.result.createEmbed("コマンド実行結果")
-            channel.send(resultMessage)
         } catch (e: Exception) {
             channel.send(
                 "＿人人人人人＿\n" +

@@ -1,50 +1,70 @@
 package lib
 
-import net.ayataka.kordis.event.events.message.MessageReceiveEvent
+import lib.cmd_impl.Command
+import lib.cmd_impl.ExampleCommand
 import lib.respond.CommandResultEnum
 import lib.respond.RespondMessage
-import net.ayataka.kordis.entity.message.MessageBuilder
-import java.awt.Color
+import net.ayataka.kordis.entity.message.Message
 
 /**
  * コマンドを実行するためのオブジェクト(シングルトンのクラス)。
  */
 object CommandExecutor {
 
+   private val commands: List<Command> = listOf(
+      ExampleCommand
+   )
+
    /**
     * ユーザーのコマンドをパースし実行する。
     *
     * @return コマンドを実行した結果とメッセージ
     */
-   fun parseAndExec(message: MessageReceiveEvent): RespondMessage {
+   fun parseAndExec(message: Message, prefix: String): RespondMessage {
 
-      // このbotは「ユーザーごとに」「2つの状態」があります
-      // 詳しくはREADMEを見ようね
+      // コマンドを解析する
+      val debug = message.content.startsWith("$prefix*")
 
+      val commandElements: List<String> = message.content.splitByDelimiters()
+      val cmdName: String = commandElements[0].substring( if(debug) prefix.length + 1 else prefix.length )
+      val cmdArgs: List<String> = commandElements.subList(1, commandElements.size)
 
-      // "@"で始まるコマンドは「共通セッション」で動かす
-      // 「ユーザーセッション」
+      // ヘルプコマンド
+      if(cmdName == "help" || cmdName == "?"){
+         return helpCommand(cmdArgs)
+      }
 
-      val queuedMessage: Array<MessageBuilder.() -> Unit> = arrayOf<MessageBuilder.() -> Unit>(
-         {
-            embed {
-               color = Color.BLUE
-               author("somewho")
-               description = "nicely description"
-               field(
-                  "Message Info",
-                  "this is some test lmao"
-               )
-            }
-         },
-         {
-            content = "Normal Message Test"
+      for(cmd: Command in this.commands){
+         if(cmd.getCommandName() == cmdName){
+            if(cmdArgs[0] == "help" || cmdArgs[0] == "?")
+               return RespondMessage(cmd.getHelp(), CommandResultEnum.SUCCEED)
+
+            return cmd.execute(cmdArgs, message, debug)
          }
-      )
+      }
 
-      // メッセージを出力する
-      return RespondMessage(queuedMessage, CommandResultEnum.SUCCEED)
+      return RespondMessage("よく分からんコマンドがぶん投げられました", CommandResultEnum.COMMAND_UNKNOWN)
 
+   }
+
+   private fun helpCommand(args: List<String>): RespondMessage{
+      if(args.isNotEmpty()){
+         // help表示対象のコマンドが指定されている
+         for(cmd: Command in this.commands){
+            if(cmd.getCommandName() == args[0]){
+               return RespondMessage(cmd.getHelp(), CommandResultEnum.SUCCEED)
+            }
+         }
+         return RespondMessage("そんなコマンドは(ないです。)", CommandResultEnum.COMMAND_UNKNOWN)
+      }
+
+      // 実行可能なコマンド一覧
+      var helpMessage = ""
+      for(cmd: Command in this.commands){
+         helpMessage += "`${cmd.getCommandName()}` >> ${cmd.getCommandTitle()}\n```${cmd.getCommandSummary()}```\n"
+      }
+
+      return RespondMessage(helpMessage, CommandResultEnum.SUCCEED)
    }
 
 

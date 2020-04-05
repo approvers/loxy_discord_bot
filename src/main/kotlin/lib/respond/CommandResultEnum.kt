@@ -1,6 +1,5 @@
 package lib.respond
 
-import lib.Embeddable
 import java.awt.Color
 
 /**
@@ -9,18 +8,14 @@ import java.awt.Color
 enum class CommandResultEnum : Embeddable {
     SUCCEED{
         override fun toJapaneseString() = "成功しました"
-        override fun color() = Color.GREEN
+        override fun color(): Color = Color.GREEN
     },
     COMMAND_UNKNOWN{
         override fun toJapaneseString() = "よく分からんコマンドが投げられました"
-        override fun color() = Color.RED
+        override fun color(): Color = Color.RED
     },
-    EXCEPTION_THROWN{
-        override fun toJapaneseString() = "例外がぶん投げられました、ガバコードが発覚しました"
-        override fun color() = Color.PINK
-    },
-    UNKONOW{
+    UNKNOWN{
         override fun toJapaneseString() = "`unknown error`です、何があったのかがわかりません"
-        override fun color() = Color.PINK
+        override fun color(): Color = Color.GRAY
     };
 }
