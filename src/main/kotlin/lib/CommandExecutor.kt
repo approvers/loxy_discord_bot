@@ -18,9 +18,13 @@ object CommandExecutor {
     */
    fun parseAndExec(message: MessageReceiveEvent): RespondMessage {
 
-      // 送信するメッセージ
-      // なんでこんな型になっているかというとchannel.send がこの型で引数を取るからです
-      // 気持ち悪いのでこのブランチ内で変更するかも
+      // このbotは「ユーザーごとに」「2つの状態」があります
+      // 詳しくはREADMEを見ようね
+
+
+      // "@"で始まるコマンドは「共通セッション」で動かす
+      // 「ユーザーセッション」
+
       val queuedMessage: Array<MessageBuilder.() -> Unit> = arrayOf<MessageBuilder.() -> Unit>(
          {
             embed {
