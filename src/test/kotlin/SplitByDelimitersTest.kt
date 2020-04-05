@@ -53,8 +53,8 @@ class SplitByDelimitersTest{
     fun case002_stringDelimiterSplitTest() {
         println("--- stringDelimiterSplitTest")
         assert(isEqual(listOf("123", "456 789", "012"), "123 '456 789' 012". splitByDelimiters()))
-        //assert(isEqual(listOf("123", "", "456", "789", "", "012"), "123 '' '456' '789' '' 012". splitByDelimiters()))
-        //assert(isEqual(listOf("123", "", "456", "789", "", "012"), "123 '' \"456\" '789' \"\" 012". splitByDelimiters()))
+        assert(isEqual(listOf("123", "", "456", "789", "", "012"), "123 '' '456' '789' '' 012". splitByDelimiters()))
+        assert(isEqual(listOf("123", "", "456", "789", "", "012"), "123 '' \"456\" '789' \"\" 012". splitByDelimiters()))
         assert(isEqual(listOf("123", "456"), "'123' '456'". splitByDelimiters()))
         assert(isEqual(listOf("123", "456"), "'123'\"456\"". splitByDelimiters()))
         assert(isEqual(listOf("123", "", "456"), "123      ''      '456'". splitByDelimiters()))
