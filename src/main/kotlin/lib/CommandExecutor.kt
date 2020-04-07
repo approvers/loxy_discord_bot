@@ -4,7 +4,9 @@ import lib.cmd_impl.Command
 import lib.cmd_impl.ExampleCommand
 import lib.respond.CommandResultEnum
 import lib.respond.RespondMessage
-import net.ayataka.kordis.entity.message.Message
+import net.ayataka.kordis.entity.channel.TextChannel
+import net.ayataka.kordis.entity.server.Server
+import net.ayataka.kordis.entity.user.User
 
 /**
  * コマンドを実行するためのオブジェクト(シングルトンのクラス)。
@@ -20,13 +22,11 @@ object CommandExecutor {
     *
     * @return コマンドを実行した結果とメッセージ
     */
-   fun parseAndExec(message: Message, prefix: String): RespondMessage {
+   fun parseAndExec(message: String, server: Server?, channel: TextChannel, author: User): RespondMessage {
 
       // コマンドを解析する
-      val debug = message.content.startsWith("$prefix*")
-
-      val commandElements: List<String> = message.content.splitByDelimiters()
-      val cmdName: String = commandElements[0].substring( if(debug) prefix.length + 1 else prefix.length )
+      val commandElements: List<String> = message.splitByDelimiters()
+      val cmdName: String = commandElements[0]
       val cmdArgs: List<String> = commandElements.subList(1, commandElements.size)
 
       // ヘルプコマンド
@@ -35,11 +35,11 @@ object CommandExecutor {
       }
 
       for(cmd: Command in this.commands){
-         if(cmd.getCommandName() == cmdName){
+         if(cmd.name == cmdName){
             if(cmdArgs[0] == "help" || cmdArgs[0] == "?")
                return RespondMessage(cmd.getHelp(), CommandResultEnum.SUCCEED)
 
-            return cmd.execute(cmdArgs, message, debug)
+            return cmd.execute(cmdArgs, server, channel, author)
          }
       }
 
@@ -51,7 +51,8 @@ object CommandExecutor {
       if(args.isNotEmpty()){
          // help表示対象のコマンドが指定されている
          for(cmd: Command in this.commands){
-            if(cmd.getCommandName() == args[0]){
+            println(cmd.name + "(${cmd.summary})")
+            if(cmd.name == args[0]){
                return RespondMessage(cmd.getHelp(), CommandResultEnum.SUCCEED)
             }
          }
@@ -61,7 +62,7 @@ object CommandExecutor {
       // 実行可能なコマンド一覧
       var helpMessage = ""
       for(cmd: Command in this.commands){
-         helpMessage += "`${cmd.getCommandName()}` >> ${cmd.getCommandTitle()}\n```${cmd.getCommandSummary()}```\n"
+         helpMessage += "`${cmd.name}` >> ${cmd.title}\n```${cmd.summary}```\n"
       }
 
       return RespondMessage(helpMessage, CommandResultEnum.SUCCEED)

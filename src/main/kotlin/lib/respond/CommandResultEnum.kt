@@ -14,8 +14,4 @@ enum class CommandResultEnum : Embeddable {
         override fun toJapaneseString() = "よく分からんコマンドが投げられました"
         override fun color(): Color = Color.RED
     },
-    UNKNOWN{
-        override fun toJapaneseString() = "`unknown error`です、何があったのかがわかりません"
-        override fun color(): Color = Color.GRAY
-    };
 }

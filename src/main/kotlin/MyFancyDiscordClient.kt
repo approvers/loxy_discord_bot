@@ -39,12 +39,18 @@ class MyFancyDiscordClient(private val botToken: String) {
 
         // メッセージをフィルタリングする
         if (author.bot) return
+        if (event.message.author == null) return
         if (respondChannel.indexOf(channel.id) == -1) return
         if (!event.message.content.startsWith(prefix)) return
 
         try {
             // コマンドを実行する
-            val result: RespondMessage = CommandExecutor.parseAndExec(event.message, prefix)
+            val result: RespondMessage = CommandExecutor.parseAndExec(
+                event.message.content.substring(prefix.length),
+                event.message.server,
+                event.message.channel,
+                event.message.author!!
+            )
 
             // キューされたメッセージを送信する
             for(msg in result.queuedMessage){
@@ -53,7 +59,7 @@ class MyFancyDiscordClient(private val botToken: String) {
 
         } catch (e: Exception) {
             channel.send(
-                "＿人人人人人＿\n" +
+                    "＿人人人人人＿\n" +
                      "＞にゃーん！＜\n" +
                      "￣Y^Y^Y^Y^Y￣\n" +
                      "例外がぶん投げられました、これはにゃーんです\n" +

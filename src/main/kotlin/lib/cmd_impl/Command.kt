@@ -1,12 +1,16 @@
 package lib.cmd_impl
 
 import lib.respond.RespondMessage
-import net.ayataka.kordis.entity.message.Message
+import net.ayataka.kordis.entity.channel.TextChannel
+import net.ayataka.kordis.entity.server.Server
+import net.ayataka.kordis.entity.user.User
 
 interface Command {
-    fun getCommandName(): String
-    fun getCommandTitle(): String
-    fun getCommandSummary(): String
+
+    val name: String
+    val title: String
+    val summary: String
+
     fun getHelp(): String
-    fun execute(args: List<String>, message: Message, debug: Boolean): RespondMessage
+    fun execute(args: List<String>, server: Server?, channel: TextChannel, author: User): RespondMessage
 }

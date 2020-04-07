@@ -1,13 +1,12 @@
 import lib.splitByDelimiters
 import org.junit.Test
-import java.util.*
 
 /**
  * Utility.kt のSplitByDelimitersTest関数のテストです
  */
 class SplitByDelimitersTest{
 
-    fun isEqual(a: List<Any>, b: List<Any>): Boolean{
+    private fun isEqual(a: List<Any>, b: List<Any>): Boolean{
 
         println("Input A : [\"" + a.joinToString("\", \"") + "\"]")
         println("Input B : [\"" + b.joinToString("\", \"") + "\"]")
@@ -45,7 +44,7 @@ class SplitByDelimitersTest{
         assert(isEqual("123".split(' '), "123".splitByDelimiters()))
         assert(isEqual("123 456".split(' '), "123 456".splitByDelimiters()))
         assert(isEqual("123 456".split(' '), "123 456 ".splitByDelimiters()))
-        assert(isEqual(listOf("123", "4", "6"), "123 456 ".splitByDelimiters(delimiter = " 5".toCharArray())))
+        assert(isEqual(listOf("123", "4", "6"), "123 456 ".splitByDelimiters(stripDelimiter = " 5".toCharArray())))
         assert(isEqual("".split(' '), "".splitByDelimiters()))
     }
 
